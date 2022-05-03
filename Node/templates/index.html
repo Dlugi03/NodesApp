@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Dlugi's Nodes App</title>
+</head>
+<body>
+    <h1>Dlugi's Nodes App</h1> <br />
+    <form action="add" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Add Node">
+    </form>
+    <br /><br />
+    {% for n in nodes %}
+        <div class="node">
+            <p> {{ n.name }} </p>
+
+            <form action="{{ n.name }}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Delete" >
+            </form>
+        </div>
+    {% endfor %}
+</body>
+</html>
