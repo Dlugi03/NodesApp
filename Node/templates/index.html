@@ -4,22 +4,43 @@
     <title>Dlugi's Nodes App</title>
 </head>
 <body>
+
+    <script>
+        function showEditForm(show, node_name)
+        {
+            var x = document.getElementById("edit-form");
+            x.style.display = (show) ? "block" : "none";
+            x.action = "/edit/" + node_name;
+        }
+    </script>
+
     <h1>Dlugi's Nodes App</h1> <br />
     <form action="add" method="post">
         {% csrf_token %}
-        {{ form }}
+        {{ add_form }}
         <input type="submit" value="Add Node">
     </form>
+
+    <form action="/edit/" method="post" id="edit-form" style="display: none;">
+        {% csrf_token %}
+        {{ edit_form }}
+        <input type="submit" value="Apply" onclick="style.display = none;">
+    </form>
+
     <br /><br />
     {% for n in nodes %}
         <div class="node">
             <p> {{ n.name }} </p>
 
+            <button type="button" onclick="showEditForm(true, '{{ n.name }}')">Edit</button>
+
             <form action="{{ n.name }}" method="post">
                 {% csrf_token %}
-                <input type="submit" value="Delete" >
+                <input type="submit" value="Delete">
             </form>
+
         </div>
     {% endfor %}
+
 </body>
 </html>

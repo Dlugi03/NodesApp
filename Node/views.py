@@ -5,10 +5,10 @@ from . import forms
 
 # Create your views here.
 def index(request):
-    nodes = Node.objects.all()
+    nodes = Node.nodes.all()
     
-    if nodes is not Node:
-        return render(request, 'index.html', {'form': forms.AddNodeForm(), 'nodes': nodes})
+    if nodes is not None:
+        return render(request, 'index.html', {'add_form': forms.AddNodeForm(), 'nodes': nodes, 'edit_form': forms.EditNodeForm()})
 
 
 def add_node(request):
@@ -16,14 +16,21 @@ def add_node(request):
         new_name = request.POST['name']
         
         if new_name is not None and new_name != "":
-            n = Node(name=new_name)
-            n.save()
+            n = Node.nodes.create_node(name=new_name)
             
     return redirect('/')
 
+def edit_node(request, name):
+    if request.method == 'POST':
+        ni = Node.nodes.filter(name=name).values('pk')[0]['pk']
+        Node.nodes.edit_name(pk=ni, new_name=request.POST['new_name'])
+
+    return redirect('/')
+
+
 def remove_node(request, name):
     if request.method == 'POST':
-        n = Node.objects.filter(name=name)
+        n = Node.nodes.filter(name=name)
         n.delete()
     
     return redirect('/')
